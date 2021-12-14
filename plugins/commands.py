@@ -25,35 +25,6 @@ async def start(c, m, cb=False):
     owner = await c.get_users(int(OWNER_ID))
     owner_username = owner.username if owner.username else 'Ns_bot_updates'
 
-    # start text
-    text = f"""Hey! {m.from_user.mention(style='md')}
-
-💡 ** I am Telegram File Store Bot**
-
-`You can store your Telegram Media for permanent Link!`
-
-
-**👲 Maintained By:** {owner.mention(style='md')}
-"""
-
-    # Buttons
-    buttons = [
-        [
-            InlineKeyboardButton('My Father 👨‍✈️', url=f"https://t.me/{owner_username}"),
-            InlineKeyboardButton('Help 💡', callback_data="help")
-        ],
-        [
-            InlineKeyboardButton('About 📕', callback_data="about")
-        ]
-    ]
-
-    # when button home is pressed
-    if cb:
-        return await m.message.edit(
-                   text=text,
-                   reply_markup=InlineKeyboardMarkup(buttons)
-               )
-
     if len(m.command) > 1: # sending the stored file
         try:
             m.command[1] = await decode(m.command[1])
