@@ -132,3 +132,28 @@ async def encode_string(string):
     base64_bytes = base64.b64encode(string_bytes)
     base64_string = base64_bytes.decode("ascii")
     return base64_string
+    )
+
+
+@Client.on_callback_query(filters.regex('^home$'))
+async def home_cb(c, m):
+    await m.answer()
+    await start(c, m, cb=True)
+
+
+@Client.on_callback_query(filters.regex('^done$'))
+async def done_cb(c, m):
+    BATCH.remove(m.from_user.id)
+    c.cancel_listener(m.from_user.id)
+    await m.message.delete()
+
+
+@Client.on_callback_query(filters.regex('^delete'))
+async def delete_cb(c, m):
+    await m.answer()
+    cmd, msg_id = m.data.split("+")
+    chat_id = m.from_user.id if not DB_CHANNEL_ID else int(DB_CHANNEL_ID)
+    message = await c.get_messages(chat_id, int(msg_id))
+    await message.delete()
+    await m.message.edit("Deleted files successfully 👨‍✈️")
+
