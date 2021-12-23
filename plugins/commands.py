@@ -17,11 +17,6 @@ from config import *
 BATCH = []
 
 
-@Client.on_message(filters.command('start') & filters.incoming & filters.private)
-async def start(c, m, cb=False):
-    if not cb:
-        send_msg = await m.reply_text("**Processing...**", quote=True)
-
     owner = await c.get_users(int(OWNER_ID))
     owner_username = owner.username if owner.username else 'Ns_bot_updates'
 
@@ -59,54 +54,6 @@ async def start(c, m, cb=False):
         
         caption = f"{msg.caption.markdown}\n\n\n" if msg.caption else ""
         as_uploadername = (await get_data(str(chat_id))).up_name
-        
-        if as_uploadername:
-            if chat_id.startswith('-100'):
-                channel = await c.get_chat(int(chat_id))
-                caption += "**--Uploader Details:--**\n\n" 
-                caption += f"__📢 Channel Name:__ `{channel.title}`\n\n" 
-                caption += f"__🗣 User Name:__ @{channel.username}\n\n" if channel.username else "" 
-                caption += f"__👤 Channel Id:__ `{channel.id}`\n\n" 
-                caption += f"__💬 DC ID:__ {channel.dc_id}\n\n" if channel.dc_id else "" 
-                caption += f"__👁 Members Count:__ {channel.members_count}\n\n" if channel.members_count else ""
-            else:
-                user = await c.get_users(int(chat_id)) 
-                caption += "**--Uploader Details:--**\n\n" 
-                caption += f"__🦚 First Name:__ `{user.first_name}`\n\n" 
-                caption += f"__🐧 Last Name:__ `{user.last_name}`\n\n" if user.last_name else "" 
-                caption += f"__👁 User Name:__ @{user.username}\n\n" if user.username else "" 
-                caption += f"__👤 User Id:__ `{user.id}`\n\n" 
-                caption += f"__💬 DC ID:__ {user.dc_id}\n\n" if user.dc_id else ""
-
-
-        await send_msg.delete()
-        await msg.copy(m.from_user.id, caption=caption)
-
-
-    else: # sending start message
-        await send_msg.edit(
-            text=text,
-            reply_markup=InlineKeyboardMarkup(buttons)
-        )
-
-
-@Client.on_message(filters.command('me') & filters.incoming & filters.private)
-async def me(c, m):
-    """ This will be sent when /me command was used"""
-
-    me = await c.get_users(m.from_user.id)
-    text = "--**YOUR DETAILS:**--\n\n\n"
-    text += f"__🦚 First Name:__ `{me.first_name}`\n\n"
-    text += f"__🐧 Last Name:__ `{me.last_name}`\n\n" if me.last_name else ""
-    text += f"__👁 User Name:__ @{me.username}\n\n" if me.username else ""
-    text += f"__👤 User Id:__ `{me.id}`\n\n"
-    text += f"__💬 DC ID:__ {me.dc_id}\n\n" if me.dc_id else ""
-    text += f"__✔ Is Verified By TELEGRAM:__ `{me.is_verified}`\n\n" if me.is_verified else ""
-    text += f"__👺 Is Fake:__ {me.is_fake}\n\n" if me.is_fake else ""
-    text += f"__💨 Is Scam:__ {me.is_scam}\n\n" if me.is_scam else ""
-    text += f"__📃 Language Code:__ {me.language_code}\n\n" if me.language_code else ""
-
-    await m.reply_text(text, quote=True)
 
 
 @Client.on_message(filters.command('batch') & filters.private & filters.incoming)
